@@ -1,4 +1,7 @@
-﻿using MvvmCross.ViewModels;
+﻿using MvvmCross;
+using MvvmCross.ViewModels;
+using SalesAround.Core.Services;
+using SalesAround.Core.ViewModels;
 
 namespace SalesAround.Core
 {
@@ -6,7 +9,9 @@ namespace SalesAround.Core
     {
         public override void Initialize()
         {
-            RegisterAppStart<MvxViewModel>();
+            Mvx.IoCProvider.RegisterType<ILocationService, LocationService>();
+
+            RegisterAppStart<MainViewModel>();
         }
     }
 }

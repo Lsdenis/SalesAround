@@ -1,11 +1,12 @@
 ﻿using System;
+using Android.App;
 using Android.Runtime;
-using MvvmCross.Platforms.Android.Core;
-using MvvmCross.Platforms.Android.Views;
+using MvvmCross.Droid.Support.V7.AppCompat;
 
 namespace SalesAround.Android
 {
-    public class Application : MvxAndroidApplication<MvxAndroidSetup<Core.Application>, Core.Application>
+    [Application]
+    public class Application : MvxAppCompatApplication<MvxAppCompatSetup<Core.Application>, Core.Application>
     {
         public Application(IntPtr javaReference, JniHandleOwnership transfer)
             : base(javaReference, transfer)
