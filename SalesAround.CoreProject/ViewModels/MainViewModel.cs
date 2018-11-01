@@ -4,26 +4,26 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using MvvmCross.Plugin.Messenger;
+using MvvmCross.Commands;
+using MvvmCross.Plugin.WebBrowser;
 using MvvmCross.ViewModels;
 using Newtonsoft.Json;
-using SalesAround.Core.DTO;
-using SalesAround.Core.Messages;
-using SalesAround.Core.Services;
+using SalesAround.CoreProject.DTO;
 
-namespace SalesAround.Core.ViewModels
+namespace SalesAround.CoreProject.ViewModels
 {
     public class MainViewModel : MvxViewModel
     {
         private const double Bound = 0.007;
+        private readonly IMvxWebBrowserTask _browserTask;
         private List<Feature> _allFeatures;
+        private IMvxCommand<Feature> _featureSelected;
         private double _previuosLatitude;
         private double _previuosLongitude;
-        private MvxSubscriptionToken _token;
 
-        public MainViewModel(IMvxMessenger messenger, ILocationService service)
+        public MainViewModel(IMvxWebBrowserTask browserTask)
         {
-            _token = messenger.Subscribe<LocationMessage>(OnLocationChanged);
+            _browserTask = browserTask;
         }
 
         public List<Feature> FeaturesAround
@@ -51,10 +51,18 @@ namespace SalesAround.Core.ViewModels
             }
         }
 
-        private void OnLocationChanged(LocationMessage message)
+        public IMvxCommand<Feature> FeatureSelected =>
+            _featureSelected ?? (_featureSelected = new MvxCommand<Feature>(FeatureSelectedExecute));
+
+        private void FeatureSelectedExecute(Feature feature)
         {
-            _previuosLatitude = message.Lat;
-            _previuosLongitude = message.Lng;
+            _browserTask.ShowWebPage($"https://www.slivki.by{feature.Properties.Url}");
+        }
+
+        public void OnLocationChanged(double latitude, double longitude)
+        {
+            _previuosLatitude = latitude;
+            _previuosLongitude = longitude;
 
             RaisePropertyChanged(nameof(FeaturesAround));
         }

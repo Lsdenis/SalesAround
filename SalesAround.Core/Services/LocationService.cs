@@ -13,7 +13,7 @@ namespace SalesAround.Core.Services
         {
             _watcher = watcher;
             _messenger = messenger;
-//            _watcher.Start(new MvxLocationOptions(), OnLocation, OnError);
+            _watcher.Start(new MvxLocationOptions(), OnLocation, OnError);
         }
 
         private void OnLocation(MvxGeoLocation location)
